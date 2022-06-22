@@ -8,7 +8,7 @@
             body {
                 margin-left: 0;
                 margin-right: 0;
-		font-size: 8px;
+		font-size: 15px;
             }
             #flatpaklist {
               list-style-type: none;
@@ -52,20 +52,30 @@
 		let s = "";
 
                 flatpaks.forEach(flatpak => {
-                     var e = document.createElement("li");
-                     document.getElementById("flatpaklist").appendChild(e);
-                     e.innerHTML = "Pause " + flatpak[1];
-		     e.onclick = async function() {
+                     var li = document.createElement("li");
+	             var div = document.createElement("div");
+		     li.appendChild(div);
+                     div.innerHTML = flatpak[1];
+
+	             var pauseBtn = document.createElement("button");
+		    pauseBtn.innerHTML = "Pause";
+		    pauseBtn.onclick = async function() {
                          launch_flatpak(flatpak[0], flatpak[1], "stop");
-			 get_flatpaks();
+		     	 get_flatpaks();
                      };
-                     e = document.createElement("li");
-                     document.getElementById("flatpaklist").appendChild(e);
-                     e.innerHTML = "Resume " + flatpak[1];
-		     e.onclick = async function() {
+
+		    li.appendChild(pauseBtn);
+		    
+	             var resumeBtn = document.createElement("button");
+		    resumeBtn.innerHTML = "Resume";
+		    resumeBtn.onclick = async function() {
                          launch_flatpak(flatpak[0], flatpak[1], "go");
-			 get_flatpaks();
+		     	 get_flatpaks();
                      };
+
+		    li.appendChild(resumeBtn);
+
+                     document.getElementById("flatpaklist").appendChild(li);
 		});
             }
 
