@@ -1,0 +1,7 @@
+{
+    "name": "Deck Suspender",
+    "author": "safijari",
+    "main_view_html": "main_view.html",
+    "tile_view_html": "",
+    "flags": ["hot_reload", "root", "debug"]
+}

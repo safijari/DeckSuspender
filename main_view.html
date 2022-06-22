@@ -1,0 +1,84 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="/steam_resource/css/2.css">
+        <link rel="stylesheet" href="/steam_resource/css/39.css">
+        <link rel="stylesheet" href="/steam_resource/css/library.css">
+        <script src="/static/library.js"></script>
+        <style>
+            body {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            #flatpaklist {
+              list-style-type: none;
+              padding: 0;
+              overflow-y: scroll;
+              height: 80%;
+              margin-bottom: 0;
+            }
+
+            #settings {
+                overflow: none;
+                border-top: 1px #23262e solid;
+                bottom: 0;
+                top: 0;
+                width: 100%;
+            }
+            #settings > div {
+                padding: 12px;
+            }
+
+            li {
+                padding: 12px;
+                border-bottom: 1px solid #23262e;
+            }
+        </style>
+    </head>
+    <body style="overflow-y: hidden;">
+	<!-- <div id="dump"></div> -->
+        <ul id="flatpaklist"></ul>
+        <div id="settings">
+            <div id="status"></div>
+        </div>                                          
+
+        <script>
+            const status = document.getElementById("status")
+
+            async function show_list() {
+                status.innerHTML = "Fetching procs...";
+
+                let flatpaks = await get_flatpaks();
+		let s = "";
+
+                flatpaks.forEach(flatpak => {
+                     let e = document.createElement("li");
+                     document.getElementById("flatpaklist").appendChild(e);
+                     e.innerHTML = flatpak[1];
+		     e.onclick = async function() {
+                         launch_flatpak(flatpak[0], flatpak[1]);
+			 get_flatpaks();
+                     }
+		});
+            }
+
+	  async function launch_flatpak(pid, pkg) {
+                status.innerHTML = "Processing " + pkg;
+		let list = await call_plugin_method("kill", {"pid": pid});
+            }
+
+            async function get_flatpaks() {
+                // status.innerHTML = "in get flatpaks";
+                let list = await call_plugin_method("get_procs", {});
+                list = JSON.parse(list);
+                // status.innerHTML = "got list" + list;
+                return list;
+            }
+
+            function exit() {
+                location.href = "http://127.0.0.1:1337/plugins/iframe";
+            }
+
+            show_list();
+        </script>
+    </body>
+</html>
