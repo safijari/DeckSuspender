@@ -51,19 +51,27 @@
 		let s = "";
 
                 flatpaks.forEach(flatpak => {
-                     let e = document.createElement("li");
+                     var e = document.createElement("li");
                      document.getElementById("flatpaklist").appendChild(e);
-                     e.innerHTML = flatpak[1];
+                     e.innerHTML = "Pause " + flatpak[1];
 		     e.onclick = async function() {
-                         launch_flatpak(flatpak[0], flatpak[1]);
+                         launch_flatpak(flatpak[0], flatpak[1], "stop");
 			 get_flatpaks();
-                     }
+                     };
+                     e = document.createElement("li");
+                     document.getElementById("flatpaklist").appendChild(e);
+                     e.innerHTML = "Resume " + flatpak[1];
+		     e.onclick = async function() {
+                         launch_flatpak(flatpak[0], flatpak[1], "go");
+			 get_flatpaks();
+                     };
 		});
             }
 
-	  async function launch_flatpak(pid, pkg) {
+	  async function launch_flatpak(pid, pkg, cmd) {
                 status.innerHTML = "Processing " + pkg;
-		let list = await call_plugin_method("kill", {"pid": pid});
+		let list = await call_plugin_method("kill", {"pid": pid, "cmd": cmd});
+                status.innerHTML = "Done processing " + pkg;
             }
 
             async function get_flatpaks() {
